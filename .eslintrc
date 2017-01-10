@@ -1,0 +1,10 @@
+{
+  "extends": "rallycoding",
+  "run": "onSave",
+  "rules": {
+    "linebreak-style": [
+      "error",
+      "windows"
+    ]
+  }
+}
