@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
+import Chut from './Chut';
+
+require('../less/main.less');
 
 class App extends Component {
     
@@ -27,6 +30,12 @@ class App extends Component {
         });
     }
 
+    onKeyPress(event) {
+        if (event.key === 'Enter') {
+            this.submitMessage();
+        }
+    }
+
     handleChange(event) {
         this.setState({ message: event.target.value });
     }
@@ -47,19 +56,20 @@ class App extends Component {
     }
 
     renderMessages() {
-        return this.state.allMessages.map((message) => (<li>{message}</li>)); 
+        return this.state.allMessages.map((message) => (<Chut message={message} />)); 
     }
 
     render() {
         return (
             <div>
                 <h1>
-                    CHUT UPP
+                    chut upp
                 </h1>
                 <ul>
                     {this.renderMessages()}
                 </ul>
-                <input 
+                <input
+                onKeyPress={this.onKeyPress.bind(this)}
                 value={this.state.message} 
                 onChange={this.handleChange.bind(this)} 
                 type='text' 
