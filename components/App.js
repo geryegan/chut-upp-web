@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 import Chut from './Chut';
+import MessageInput from './MessageInput';
 
 require('../less/main.less');
 
@@ -21,7 +22,6 @@ class App extends Component {
         socket.on('mount', (data) => {
             console.log('where are we', data);
             this.setState({ allMessages: data.allMessages });
-            socket.emit('my other event', { my: 'data' });
         });
         socket.on('newMessage', (data) => {
             const allMessages = this.state.allMessages.slice();
@@ -65,16 +65,17 @@ class App extends Component {
                 <h1>
                     chut upp
                 </h1>
-                <ul>
+                <div>
                     {this.renderMessages()}
-                </ul>
-                <input
-                onKeyPress={this.onKeyPress.bind(this)}
-                value={this.state.message} 
-                onChange={this.handleChange.bind(this)} 
-                type='text' 
-                />
-                <button onClick={this.submitMessage.bind(this)}>Submit</button>
+                </div>
+                    <MessageInput
+                    onEnter={this.onKeyPress.bind(this)}
+                    value={this.state.message} 
+                    changeHandler={this.handleChange.bind(this)} 
+                    type='text' 
+                    submit={this.submitMessage.bind(this)}
+                    />
+                
             </div>
         );
     }
