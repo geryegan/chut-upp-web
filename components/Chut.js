@@ -5,7 +5,7 @@ require('../less/main.less');
 class Chut extends Component {
     render() {
         return (
-            <div>{this.props.message}</div>
+            <div className='chat'>{this.props.message}</div>
         );
     }
 }
