@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import Chut from './Chut';
 import MessageInput from './MessageInput';
+import UserInput from './UserInput';
 
 require('../less/main.less');
 
@@ -11,7 +12,8 @@ class App extends Component {
         super();
         this.state = {
             allMessages: [],
-            message: ''            
+            message: '',
+            user: ''           
         };
     }
 
@@ -21,11 +23,19 @@ class App extends Component {
         socket.emit('test');
         socket.on('mount', (data) => {
             console.log('where are we', data);
-            this.setState({ allMessages: data.allMessages });
+            this.setState({ 
+                allMessages: data.allMessages,
+                allUsers: data.allUsers
+         });
         });
+        console.log('component did mount state', this.state);
         socket.on('newMessage', (data) => {
             const allMessages = this.state.allMessages.slice();
-            allMessages.push(data.message);
+            const message = {
+                text: data.message,
+                user: data.user
+            };
+            allMessages.push(message);
             this.setState({ allMessages });
         });
     }
@@ -36,14 +46,28 @@ class App extends Component {
         }
     }
 
-    handleChange(event) {
+    setUser() {
+        const socket = io();
+        const data = {
+            user: this.state.user,
+            allUsers: this.state.allUsers
+        };
+        socket.emit('newUser', data);
+    }
+
+    handleMessageChange(event) {
         this.setState({ message: event.target.value });
+    }
+
+    handleUserChange(event) {
+        this.setState({ user: event.target.value });
     }
 
     submitMessage() {
         const socket = io();
         const data = {
             message: this.state.message,
+            user: this.state.user,
             allMessages: this.state.allMessages
         };
         socket.emit('newMessage', data);
@@ -55,8 +79,11 @@ class App extends Component {
         });
     }
 
+
     renderMessages() {
-        return this.state.allMessages.map((message) => (<Chut message={message} />)); 
+        return this.state.allMessages.map((message) => (
+            <Chut message={message.user + ': ' + message.text} />)
+        ); 
     }
 
     render() {
@@ -65,13 +92,19 @@ class App extends Component {
                 <h1>
                     chut upp
                 </h1>
+                <UserInput 
+                submit={this.setUser.bind(this)} 
+                changeHandler={this.handleUserChange.bind(this)}
+                value={this.state.user}
+                />
                 <div>
                     {this.renderMessages()}
                 </div>
                     <MessageInput
                     onEnter={this.onKeyPress.bind(this)}
-                    value={this.state.message} 
-                    changeHandler={this.handleChange.bind(this)} 
+                    value={this.state.message}
+                    user={this.state.user} 
+                    changeHandler={this.handleMessageChange.bind(this)} 
                     type='text' 
                     submit={this.submitMessage.bind(this)}
                     />

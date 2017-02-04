@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Button, FormControl } from 'react-bootstrap';
 
 
-class MessageInput extends Component {
+class UserInput extends Component {
     render() {
         return (
-            <div className='chat-input bottom'>
+            <div>
                 <FormControl
                     onKeyPress={this.props.onEnter}
                     value={this.props.value}
@@ -18,4 +18,4 @@ class MessageInput extends Component {
     }
 }
 
-export default MessageInput;
+export default UserInput;

@@ -22,9 +22,10 @@ app.use('/', (req, res) => {
 
 const port = 3000;
 let allMessages = [];
+let allUsers = [];
 
 io.on('connection', (socket) => {
-  socket.emit('mount', { allMessages });
+  socket.emit('mount', { allMessages, allUsers });
   socket.on('my other event', (data) => {
     console.log(data);
   });
@@ -33,10 +34,21 @@ io.on('connection', (socket) => {
     allMessages.push(data.message);
     const newMessage = {
       message: data.message,
+      user: data.user,
       allMessages
     };
     console.log('new message', newMessage);
     io.emit('newMessage', newMessage);
+  });
+  socket.on('newUser', (data) => {
+    allUsers = data.allUsers.slice();
+    allUsers.push(data.user);
+    const newUser = {
+      user: data.user,
+      allUsers
+    };
+    console.log('new user', newUser);
+    io.emit('newUser', newUser);
   });
   socket.on('test', () => {
     console.log('TEST FROM APP EMIT');
