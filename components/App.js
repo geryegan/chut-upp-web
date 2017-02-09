@@ -47,11 +47,8 @@ class App extends Component {
             allMessages: this.state.allMessages
         };
         socket.emit('newMessage', data);
-        // const allMessages = this.state.allMessages.slice();
-        // allMessages.push(this.state.message);
         this.setState({ 
             message: ''
-            // allMessages
         });
     }
 
