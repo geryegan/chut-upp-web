@@ -18,7 +18,6 @@ class App extends Component {
     componentDidMount() {
         const socket = io();
         io.connect('http://localhost:3000');
-        socket.emit('test');
         socket.on('mount', (data) => {
             console.log('where are we', data);
             this.setState({ allMessages: data.allMessages });
